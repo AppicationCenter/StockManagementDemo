@@ -16,13 +16,11 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
     {
         protected readonly CMSStockManagementDatabaseContext context;
         //protected readonly DbSet<T> table;
-        private readonly ILogger logger;
 
-        public RepositoryBase(CMSStockManagementDatabaseContext context, ILogger<RepositoryBase<T>> logger)
+        public RepositoryBase(CMSStockManagementDatabaseContext context)
         {
             this.context = context;
             //this.table = this.context.Set<T>();
-            this.logger = logger;
         }
 
         public void Delete(T entity)
@@ -30,7 +28,7 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             if (entity == null)
             {
                 var logMessage = $"{nameof(Delete)} entity must not be null";
-                this.logger.LogError(logMessage);
+                LogManager.LogError(logMessage);
                 throw new ArgumentNullException(logMessage);
             }
 
@@ -44,7 +42,7 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex.StackTrace);
+                LogManager.LogError(ex.StackTrace);
                 throw new Exception(ex.StackTrace);
             }
         }
@@ -86,7 +84,7 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             }
             catch (Exception ex)
             {
-                this.logger.LogError(ex.StackTrace);
+                LogManager.LogError(ex.StackTrace);
                 throw new Exception($"Couldn't retrieve entities: {ex.Message}");
             }
         }
@@ -95,7 +93,7 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
         {
             if (entity == null)
             {
-                this.logger.LogError($"{nameof(Insert)} entity must not be null");
+                LogManager.LogError($"{nameof(Insert)} entity must not be null");
                 throw new ArgumentNullException($"{nameof(Insert)} entity must not be null");
             }
 
@@ -106,7 +104,7 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
         {
             if (entity == null)
             {
-                this.logger.LogError($"{nameof(Update)} entity must not be null");
+                LogManager.LogError($"{nameof(Update)} entity must not be null");
                 throw new ArgumentNullException($"{nameof(Update)} entity must not be null");
             }
 
