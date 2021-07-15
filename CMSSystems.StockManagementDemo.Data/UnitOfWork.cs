@@ -1,5 +1,6 @@
 ﻿using CMSSystems.StockManagementDemo.Data.Base.IRepository;
 using CMSSystems.StockManagementDemo.Data.DatabaseContexts;
+using CMSSystems.StockManagementDemo.Data.IRepository;
 using CMSSystems.StockManagementDemo.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -13,8 +14,8 @@ namespace CMSSystems.StockManagementDemo.Data
     {
         private readonly CMSStockManagementDatabaseContext context;
 
-        public UnitOfWork(CMSStockManagementDatabaseContext context, IRepositoryBase<Vehicle> vehicleRepository, IRepositoryBase<StockAccessory> stockAccessoryRepository,
-            IRepositoryBase<Image> imageRepository)
+        public UnitOfWork(CMSStockManagementDatabaseContext context, IVehicleRepository vehicleRepository, IStockAccessoryRepository stockAccessoryRepository,
+            IImageRepository imageRepository)
         {
             this.context = context;
             this.VehicleRepository = vehicleRepository;
@@ -22,11 +23,11 @@ namespace CMSSystems.StockManagementDemo.Data
             this.ImageRepository = imageRepository;
         }
 
-        public IRepositoryBase<Vehicle> VehicleRepository { get; set; }
+        public IVehicleRepository VehicleRepository { get; set; }
 
-        public IRepositoryBase<StockAccessory> StockAccessoryRepository { get; set; }
+        public IStockAccessoryRepository StockAccessoryRepository { get; set; }
 
-        public IRepositoryBase<Image> ImageRepository { get; set; }
+        public IImageRepository ImageRepository { get; set; }
 
         public int Commit()
         {
@@ -40,7 +41,7 @@ namespace CMSSystems.StockManagementDemo.Data
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            this.context.Dispose();
         }
     }
 }

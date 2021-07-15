@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CMSSystems.StockManagementDemo.Data.IRepository
 {
-    public interface IIMageRepository : IRepositoryBase<Image>
+    public interface IImageRepository : IRepositoryBase<Image>
     {
     }
 }

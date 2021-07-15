@@ -15,13 +15,13 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
     public class RepositoryBase<T> : IRepositoryBase<T> where T : class
     {
         protected readonly CMSStockManagementDatabaseContext context;
-        protected readonly DbSet<T> table;
+        //protected readonly DbSet<T> table;
         private readonly ILogger logger;
 
         public RepositoryBase(CMSStockManagementDatabaseContext context, ILogger<RepositoryBase<T>> logger)
         {
             this.context = context;
-            this.table = this.context.Set<T>();
+            //this.table = this.context.Set<T>();
             this.logger = logger;
         }
 
@@ -30,7 +30,7 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             if (entity == null)
             {
                 var logMessage = $"{nameof(Delete)} entity must not be null";
-                logger.LogError(logMessage);
+                this.logger.LogError(logMessage);
                 throw new ArgumentNullException(logMessage);
             }
 
@@ -38,26 +38,25 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             {
                 if (context.Entry(entity).State == EntityState.Detached)
                 {
-                    table.Attach(entity);
+                    this.context.Set<T>().Attach(entity);
                 }
-                table.Remove(entity);
+                this.context.Set<T>().Remove(entity);
             }
             catch (Exception ex)
             {
-                //Log error
-                logger.LogError(ex.StackTrace);
+                this.logger.LogError(ex.StackTrace);
                 throw new Exception(ex.StackTrace);
             }
         }
 
         public T Find(object id)
         {
-            return table.Find(id);
+            return this.context.Set<T>().Find(id);
         }
 
         public IEnumerable<T> FindAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "")
         {
-            IQueryable<T> query = table;
+            IQueryable<T> query = this.context.Set<T>();
 
             try
             {
@@ -87,6 +86,7 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             }
             catch (Exception ex)
             {
+                this.logger.LogError(ex.StackTrace);
                 throw new Exception($"Couldn't retrieve entities: {ex.Message}");
             }
         }
@@ -95,20 +95,22 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
         {
             if (entity == null)
             {
+                this.logger.LogError($"{nameof(Insert)} entity must not be null");
                 throw new ArgumentNullException($"{nameof(Insert)} entity must not be null");
             }
 
-            table.Add(entity);
+            this.context.Set<T>().Add(entity);
         }
 
         public void Updated(T entity)
         {
             if (entity == null)
             {
+                this.logger.LogError($"{nameof(Updated)} entity must not be null");
                 throw new ArgumentNullException($"{nameof(Updated)} entity must not be null");
             }
 
-            table.Attach(entity);
+            this.context.Set<T>().Attach(entity);
             context.Entry(entity).State = EntityState.Modified;
         }
     }

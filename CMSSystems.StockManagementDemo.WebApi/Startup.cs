@@ -1,9 +1,16 @@
+using CMSSystems.StockManagementDemo.Data;
+using CMSSystems.StockManagementDemo.Data.Base.IRepository;
+using CMSSystems.StockManagementDemo.Data.Base.Repository;
+using CMSSystems.StockManagementDemo.Data.DatabaseContexts;
+using CMSSystems.StockManagementDemo.Data.IRepository;
+using CMSSystems.StockManagementDemo.Data.Repository;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -12,6 +19,7 @@ using Microsoft.Identity.Web;
 using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -29,6 +37,17 @@ namespace CMSSystems.StockManagementDemo.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CMSStockManagementDbConnectioString"),
+            //    b => b.MigrationsAssembly(typeof(CMSStockManagementDatabaseContext).Assembly.FullName)));
+            services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+
+
+            services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+            services.AddTransient<IVehicleRepository, VehicleRepository>();
+            services.AddTransient<IStockAccessoryRepository, StockAccessoryRepository>();
+            services.AddTransient<IImageRepository, IMageRepository>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
