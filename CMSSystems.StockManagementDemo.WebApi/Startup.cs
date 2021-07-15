@@ -37,15 +37,15 @@ namespace CMSSystems.StockManagementDemo.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CMSStockManagementDbConnectioString"),
-            //    b => b.MigrationsAssembly(typeof(CMSStockManagementDatabaseContext).Assembly.FullName)));
+            //services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CMSStockManagementDbConnectioString")));
+            //, b => b.MigrationsAssembly(typeof(CMSStockManagementDatabaseContext).Assembly.FullName)));
             services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
 
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
             services.AddTransient<IVehicleRepository, VehicleRepository>();
             services.AddTransient<IStockAccessoryRepository, StockAccessoryRepository>();
-            services.AddTransient<IImageRepository, IMageRepository>();
+            services.AddTransient<IImageRepository, ImageRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CMSSystems.StockManagementDemo.Domain.Models
 {
+    [Table("Images")]
     public class Image : ModelBase<int>
     {
         [Required]

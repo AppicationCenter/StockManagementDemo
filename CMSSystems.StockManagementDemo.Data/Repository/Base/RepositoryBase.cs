@@ -49,12 +49,12 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             }
         }
 
-        public T Find(object id)
+        public T Get(object id)
         {
             return this.context.Set<T>().Find(id);
         }
 
-        public IEnumerable<T> FindAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "")
+        public IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "")
         {
             IQueryable<T> query = this.context.Set<T>();
 
@@ -102,12 +102,12 @@ namespace CMSSystems.StockManagementDemo.Data.Base.Repository
             this.context.Set<T>().Add(entity);
         }
 
-        public void Updated(T entity)
+        public void Update(T entity)
         {
             if (entity == null)
             {
-                this.logger.LogError($"{nameof(Updated)} entity must not be null");
-                throw new ArgumentNullException($"{nameof(Updated)} entity must not be null");
+                this.logger.LogError($"{nameof(Update)} entity must not be null");
+                throw new ArgumentNullException($"{nameof(Update)} entity must not be null");
             }
 
             this.context.Set<T>().Attach(entity);

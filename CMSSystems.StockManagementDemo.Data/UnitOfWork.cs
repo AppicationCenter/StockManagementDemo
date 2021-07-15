@@ -1,6 +1,7 @@
 ﻿using CMSSystems.StockManagementDemo.Data.Base.IRepository;
 using CMSSystems.StockManagementDemo.Data.DatabaseContexts;
 using CMSSystems.StockManagementDemo.Data.IRepository;
+using CMSSystems.StockManagementDemo.Data.Repository;
 using CMSSystems.StockManagementDemo.Domain.Models;
 using System;
 using System.Collections.Generic;
@@ -13,21 +14,64 @@ namespace CMSSystems.StockManagementDemo.Data
     public class UnitOfWork : IUnitOfWork
     {
         private readonly CMSStockManagementDatabaseContext context;
+        private IVehicleRepository vehicleRepository;
+        private IStockAccessoryRepository stockAccessoryRepository;
+        private IImageRepository imageRepository;
 
-        public UnitOfWork(CMSStockManagementDatabaseContext context, IVehicleRepository vehicleRepository, IStockAccessoryRepository stockAccessoryRepository,
-            IImageRepository imageRepository)
+        public UnitOfWork(CMSStockManagementDatabaseContext context)
         {
             this.context = context;
-            this.VehicleRepository = vehicleRepository;
-            this.StockAccessoryRepository = stockAccessoryRepository;
-            this.ImageRepository = imageRepository;
         }
 
-        public IVehicleRepository VehicleRepository { get; set; }
+        //public UnitOfWork(CMSStockManagementDatabaseContext context, IVehicleRepository vehicleRepository, IStockAccessoryRepository stockAccessoryRepository,
+        //    IImageRepository imageRepository)
+        //{
+        //    this.context = context;
+        //    this.VehicleRepository = vehicleRepository;
+        //    this.StockAccessoryRepository = stockAccessoryRepository;
+        //    this.ImageRepository = imageRepository;
+        //}
 
-        public IStockAccessoryRepository StockAccessoryRepository { get; set; }
 
-        public IImageRepository ImageRepository { get; set; }
+
+        public IVehicleRepository VehicleRepository 
+        {
+            get
+            {
+                if (this.vehicleRepository == null)
+                {
+                    this.vehicleRepository = new VehicleRepository(this.context);
+                }
+
+                return this.vehicleRepository;
+            }
+        }
+
+        public IStockAccessoryRepository StockAccessoryRepository
+        {
+            get
+            {
+                if (this.stockAccessoryRepository == null)
+                {
+                    this.stockAccessoryRepository = new StockAccessoryRepository(this.context);
+                }
+
+                return this.stockAccessoryRepository;
+            }
+        }
+
+        public IImageRepository ImageRepository
+        {
+            get
+            {
+                if (this.imageRepository == null)
+                {
+                    this.imageRepository = new ImageRepository(this.context);
+                }
+
+                return this.imageRepository;
+            }
+        }
 
         public int Commit()
         {

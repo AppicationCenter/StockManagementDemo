@@ -16,14 +16,19 @@ namespace CMSSystems.StockManagementDemo.Data.DatabaseContexts
 
         }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            if (!optionsBuilder.IsConfigured)
-            {
-                var connectionString = ConfigurationManager.ConnectionStrings["CMSStockManagementDbConnectioString"].ConnectionString;
-                optionsBuilder.UseSqlServer(connectionString);
-            }
+            base.OnModelCreating(modelBuilder);
         }
+
+        //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        //{
+        //    if (!optionsBuilder.IsConfigured)
+        //    {
+        //        var connectionString = ConfigurationManager.ConnectionStrings["CMSStockManagementDbConnectioString"].ConnectionString;
+        //        optionsBuilder.UseSqlServer(connectionString);
+        //    }
+        //}
 
 
         public DbSet<Vehicle> Vehicles { get; set; }

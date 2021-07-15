@@ -10,9 +10,9 @@ using System.Threading.Tasks;
 
 namespace CMSSystems.StockManagementDemo.Data.Repository
 {
-    public class IMageRepository : RepositoryBase<Image>, IImageRepository
+    public class ImageRepository : RepositoryBase<Image>, IImageRepository
     {
-        public IMageRepository(CMSStockManagementDatabaseContext context) : base(context)
+        public ImageRepository(CMSStockManagementDatabaseContext context) : base(context)
         {
         }
     }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace CMSSystems.StockManagementDemo.Domain.Models
 {
+    [Table("StockAccessories")]
     public class StockAccessory : ModelBase<int>
     {
         [Required]

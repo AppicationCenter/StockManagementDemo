@@ -11,11 +11,11 @@ namespace CMSSystems.StockManagementDemo.Data
 {
     public interface IUnitOfWork : IDisposable
     {
-        IVehicleRepository VehicleRepository { get; set; }
+        IVehicleRepository VehicleRepository { get; }
 
-        IStockAccessoryRepository StockAccessoryRepository { get; set; }
+        IStockAccessoryRepository StockAccessoryRepository { get; }
 
-        IImageRepository ImageRepository { get; set; }
+        IImageRepository ImageRepository { get; }
 
         Task<int> CommitAsync();
 

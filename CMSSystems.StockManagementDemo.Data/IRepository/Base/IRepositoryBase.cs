@@ -11,11 +11,11 @@ namespace CMSSystems.StockManagementDemo.Data.Base.IRepository
     {
         void Insert(T entity);
 
-        T Find(object id);
+        T Get(object id);
 
-        IEnumerable<T> FindAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "");
+        IEnumerable<T> GetAll(Expression<Func<T, bool>> filter = null, Func<IQueryable<T>, IOrderedQueryable<T>> orderBy = null, string includeProperties = "");
 
-        void Updated(T entity);
+        void Update(T entity);
 
         void Delete(T entity);
     }
