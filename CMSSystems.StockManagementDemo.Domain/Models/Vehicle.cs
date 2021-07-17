@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMSSystems.StockManagementDemo.Domain.Bases;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -35,7 +36,7 @@ namespace CMSSystems.StockManagementDemo.Domain.Models
         public int ModelYear { get; set; }
 
         [Required]
-        public string KilometerReading { get; set; }
+        public int KilometerReading { get; set; }
 
         [Required]
         public string Colour { get; set; }

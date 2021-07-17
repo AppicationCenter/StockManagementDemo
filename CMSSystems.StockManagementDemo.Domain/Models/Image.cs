@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CMSSystems.StockManagementDemo.Domain.Bases;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,17 +10,21 @@ using System.Threading.Tasks;
 namespace CMSSystems.StockManagementDemo.Domain.Models
 {
     [Table("Images")]
-    public class Image : ModelBase<int>
+    public class Image : ModelBase<Guid>
     {
+        public Image()
+        {
+            this.Id = Guid.NewGuid();
+        }
+
         [Required]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public override int Id { get; set; }
+        public override Guid Id { get; set; }
 
         [Required]
         public string Name { get; set; }
 
         [Required]
-        public byte[] ImageBinary { get; set; }
+        public byte[] ImageData { get; set; }
 
         [ForeignKey(nameof(Vehicle))]
         public Guid VehicleId { get; set; }

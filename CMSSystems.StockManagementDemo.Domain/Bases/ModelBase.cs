@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CMSSystems.StockManagementDemo.Domain.Models
+namespace CMSSystems.StockManagementDemo.Domain.Bases
 {
     public class ModelBase<T>
     {
