@@ -17,9 +17,11 @@ namespace CMSSystems.StockManagementDemo.Domain.Models
         public override int Id { get; set; }
 
         [Required]
+        [MaxLength(50)]
         public string Name { get; set; }
 
-        [Required]
+        //[Required]
+        [MaxLength(50)]
         public string Description { get; set; }
 
         [ForeignKey(nameof(Vehicle))]

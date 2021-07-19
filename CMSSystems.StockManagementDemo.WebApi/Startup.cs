@@ -37,9 +37,9 @@ namespace CMSSystems.StockManagementDemo.WebApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CMSStockManagementDbConnectioString")));
+            services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseSqlServer(Configuration.GetConnectionString("CMSStockManagementDbConnectioString")));
             //, b => b.MigrationsAssembly(typeof(CMSStockManagementDatabaseContext).Assembly.FullName)));
-            services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
+            //services.AddDbContext<CMSStockManagementDatabaseContext>(options => options.UseInMemoryDatabase(Guid.NewGuid().ToString()));
 
 
             services.AddTransient(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
@@ -48,6 +48,9 @@ namespace CMSSystems.StockManagementDemo.WebApi
             services.AddTransient<IImageRepository, ImageRepository>();
             services.AddTransient<IUnitOfWork, UnitOfWork>();
 
+            services.AddCors();
+            services.AddMvc();
+            services.AddControllers().AddNewtonsoftJson();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
 
@@ -72,6 +75,9 @@ namespace CMSSystems.StockManagementDemo.WebApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CMSSystems.StockManagementDemo.WebApi v1"));
             }
+            app.UseCors(
+                options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader()
+            );
 
             app.UseHttpsRedirection();
 

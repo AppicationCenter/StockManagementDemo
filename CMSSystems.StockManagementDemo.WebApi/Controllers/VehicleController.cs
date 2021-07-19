@@ -25,7 +25,8 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
         {
             var vehicles = new List<Vehicle>();
 
-            vehicles = this.unitOfWork.VehicleRepository.GetAll().ToList();
+            string includeProperties = "Accessories,Images";
+            vehicles = this.unitOfWork.VehicleRepository.GetAll(null, null, includeProperties).ToList();
 
             return Ok(vehicles);
         }

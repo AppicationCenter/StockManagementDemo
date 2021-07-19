@@ -24,12 +24,15 @@ namespace CMSSystems.StockManagementDemo.Domain.Models
         public override Guid Id { get; set; }
 
         [Required]
+        [MaxLength(50)]
         public string RegistrationNumber { get; set; }
 
         [Required]
+        [MaxLength(50)]
         public string Make { get; set; }
 
         [Required]
+        [MaxLength(25)]
         public string Model { get; set; }
 
         [Required]
@@ -39,16 +42,18 @@ namespace CMSSystems.StockManagementDemo.Domain.Models
         public int KilometerReading { get; set; }
 
         [Required]
+        [MaxLength(25)]
         public string Colour { get; set; }
 
         [Required]
+        [MaxLength(50)]
         public string IdentificationNumber { get; set; }
 
         [Required]
         public double RetailPrice { get; set; }
 
         [Required]
-        public string CostPrice  { get; set; }
+        public double CostPrice  { get; set; }
 
         //[JsonIgnore]
         public ICollection<StockAccessory> Accessories { get; set; }
