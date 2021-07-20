@@ -4,14 +4,16 @@ using CMSSystems.StockManagementDemo.Data.DatabaseContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CMSSystems.StockManagementDemo.Data.Migrations
 {
     [DbContext(typeof(CMSStockManagementDatabaseContext))]
-    partial class CMSStockManagementDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210720150731_AddVehicleAccessoriesTable")]
+    partial class AddVehicleAccessoriesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -188,9 +190,11 @@ namespace CMSSystems.StockManagementDemo.Data.Migrations
 
             modelBuilder.Entity("CMSSystems.StockManagementDemo.Domain.Models.StockAccessory", b =>
                 {
-                    b.HasOne("CMSSystems.StockManagementDemo.Domain.Models.Vehicle", null)
+                    b.HasOne("CMSSystems.StockManagementDemo.Domain.Models.Vehicle", "Vehicle")
                         .WithMany("Accessories")
                         .HasForeignKey("VehicleId");
+
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("CMSSystems.StockManagementDemo.Domain.Models.VehicleAccessory", b =>

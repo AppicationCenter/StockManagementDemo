@@ -36,5 +36,7 @@ namespace CMSSystems.StockManagementDemo.Data.DatabaseContexts
         public DbSet<StockAccessory> StockAccessories { get; set; }
 
         public DbSet<Image> Images { get; set; }
+
+        public DbSet<VehicleAccessory> VehicleAccessories { get; set; }
     }
 }

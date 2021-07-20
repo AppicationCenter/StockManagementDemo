@@ -23,17 +23,6 @@ namespace CMSSystems.StockManagementDemo.Data
             this.context = context;
         }
 
-        //public UnitOfWork(CMSStockManagementDatabaseContext context, IVehicleRepository vehicleRepository, IStockAccessoryRepository stockAccessoryRepository,
-        //    IImageRepository imageRepository)
-        //{
-        //    this.context = context;
-        //    this.VehicleRepository = vehicleRepository;
-        //    this.StockAccessoryRepository = stockAccessoryRepository;
-        //    this.ImageRepository = imageRepository;
-        //}
-
-
-
         public IVehicleRepository VehicleRepository 
         {
             get
@@ -75,7 +64,15 @@ namespace CMSSystems.StockManagementDemo.Data
 
         public int Commit()
         {
-            return this.context.SaveChanges();
+            try
+            {
+                return this.context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                //Log exception
+                throw;
+            }
         }
 
         public async Task<int> CommitAsync()

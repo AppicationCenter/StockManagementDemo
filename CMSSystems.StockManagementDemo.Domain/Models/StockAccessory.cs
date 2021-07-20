@@ -23,10 +23,5 @@ namespace CMSSystems.StockManagementDemo.Domain.Models
         //[Required]
         [MaxLength(50)]
         public string Description { get; set; }
-
-        [ForeignKey(nameof(Vehicle))]
-        public Guid VehicleId { get; set; }
-
-        public Vehicle Vehicle { get; set; }
     }
 }

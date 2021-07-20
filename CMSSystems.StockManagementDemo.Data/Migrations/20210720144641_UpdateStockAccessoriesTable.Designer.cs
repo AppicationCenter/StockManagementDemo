@@ -4,14 +4,16 @@ using CMSSystems.StockManagementDemo.Data.DatabaseContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace CMSSystems.StockManagementDemo.Data.Migrations
 {
     [DbContext(typeof(CMSStockManagementDatabaseContext))]
-    partial class CMSStockManagementDatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20210720144641_UpdateStockAccessoriesTable")]
+    partial class UpdateStockAccessoriesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,36 +147,6 @@ namespace CMSSystems.StockManagementDemo.Data.Migrations
                     b.ToTable("Vehicles");
                 });
 
-            modelBuilder.Entity("CMSSystems.StockManagementDemo.Domain.Models.VehicleAccessory", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("DateCreated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<DateTime>("DateUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<bool>("Deleted")
-                        .HasColumnType("bit");
-
-                    b.Property<int>("StockAccessoryId")
-                        .HasColumnType("int");
-
-                    b.Property<Guid>("VehicleId")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StockAccessoryId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("VehicleAccessories");
-                });
-
             modelBuilder.Entity("CMSSystems.StockManagementDemo.Domain.Models.Image", b =>
                 {
                     b.HasOne("CMSSystems.StockManagementDemo.Domain.Models.Vehicle", "Vehicle")
@@ -188,26 +160,9 @@ namespace CMSSystems.StockManagementDemo.Data.Migrations
 
             modelBuilder.Entity("CMSSystems.StockManagementDemo.Domain.Models.StockAccessory", b =>
                 {
-                    b.HasOne("CMSSystems.StockManagementDemo.Domain.Models.Vehicle", null)
+                    b.HasOne("CMSSystems.StockManagementDemo.Domain.Models.Vehicle", "Vehicle")
                         .WithMany("Accessories")
                         .HasForeignKey("VehicleId");
-                });
-
-            modelBuilder.Entity("CMSSystems.StockManagementDemo.Domain.Models.VehicleAccessory", b =>
-                {
-                    b.HasOne("CMSSystems.StockManagementDemo.Domain.Models.StockAccessory", "StockAccessory")
-                        .WithMany()
-                        .HasForeignKey("StockAccessoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CMSSystems.StockManagementDemo.Domain.Models.Vehicle", "Vehicle")
-                        .WithMany()
-                        .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StockAccessory");
 
                     b.Navigation("Vehicle");
                 });
