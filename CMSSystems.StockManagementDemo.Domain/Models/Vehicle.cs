@@ -16,7 +16,7 @@ namespace CMSSystems.StockManagementDemo.Domain.Models
         public Vehicle()
         {
             this.Id = Guid.NewGuid();
-            this.Accessories = new HashSet<StockAccessory>();
+            this.Accessories = new HashSet<VehicleAccessory>();
             this.Images = new HashSet<Image>();
         }
 
@@ -55,10 +55,10 @@ namespace CMSSystems.StockManagementDemo.Domain.Models
         [Required]
         public double CostPrice  { get; set; }
 
-        //[JsonIgnore]
-        public ICollection<StockAccessory> Accessories { get; set; }
+        [JsonIgnore]
+        public ICollection<VehicleAccessory> Accessories { get; set; }
 
-        //[JsonIgnore]
+        [JsonIgnore]
         public ICollection<Image> Images { get; set; }
     }
 }

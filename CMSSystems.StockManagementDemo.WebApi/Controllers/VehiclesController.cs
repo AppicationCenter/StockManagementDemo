@@ -2,6 +2,7 @@
 using CMSSystems.StockManagementDemo.Domain.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,11 +12,11 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class VehicleController : ControllerBase
+    public class VehiclesController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public VehicleController(IUnitOfWork unitOfWork)
+        public VehiclesController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
@@ -27,6 +28,11 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
 
             string includeProperties = "Accessories,Images";
             vehicles = this.unitOfWork.VehicleRepository.GetAll(null, null, includeProperties).ToList();
+            //var vehiclesJson = JsonConvert.SerializeObject(vehicles, Formatting.Indented,
+            //new JsonSerializerSettings
+            //{
+            //    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
+            //});
 
             return Ok(vehicles);
         }

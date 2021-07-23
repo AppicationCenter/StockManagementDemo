@@ -11,16 +11,17 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StockAccessoryController : ControllerBase
+    public class StockAccessoriesController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
 
-        public StockAccessoryController(IUnitOfWork unitOfWork)
+        public StockAccessoriesController(IUnitOfWork unitOfWork)
         {
             this.unitOfWork = unitOfWork;
         }
 
         [HttpGet]
+        //[RoutePrefix("quotes")]
         public IActionResult GetAll()
         {
             var StockAccessories = new List<StockAccessory>();
