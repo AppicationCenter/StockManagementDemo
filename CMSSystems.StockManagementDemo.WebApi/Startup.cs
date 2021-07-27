@@ -4,6 +4,7 @@ using CMSSystems.StockManagementDemo.Data.Base.Repository;
 using CMSSystems.StockManagementDemo.Data.DatabaseContexts;
 using CMSSystems.StockManagementDemo.Data.IRepository;
 using CMSSystems.StockManagementDemo.Data.Repository;
+using CMSSystems.StockManagementDemo.WebApi.IdentityConfiguration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -57,7 +58,15 @@ namespace CMSSystems.StockManagementDemo.WebApi
             services.AddControllers().AddNewtonsoftJson();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddMicrosoftIdentityWebApi(Configuration.GetSection("AzureAd"));
+            services.AddIdentityServer()
+        .AddInMemoryClients(Clients.Get())
+        .AddInMemoryIdentityResources(Resources.GetIdentityResources())
+        .AddInMemoryApiResources(Resources.GetApiResources())
+        .AddInMemoryApiScopes(Scopes.GetApiScopes())
+        .AddTestUsers(Users.Get())
+        .AddDeveloperSigningCredential();
 
+            services.AddControllersWithViews();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -85,7 +94,9 @@ namespace CMSSystems.StockManagementDemo.WebApi
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
             app.UseRouting();
+            app.UseIdentityServer();
 
             app.UseAuthentication();
             app.UseAuthorization();

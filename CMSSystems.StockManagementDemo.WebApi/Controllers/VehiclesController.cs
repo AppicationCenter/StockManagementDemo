@@ -1,7 +1,9 @@
 ﻿using CMSSystems.StockManagementDemo.Data;
 using CMSSystems.StockManagementDemo.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,26 +17,30 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
     public class VehiclesController : ControllerBase
     {
         private readonly IUnitOfWork unitOfWork;
+        private readonly ILogger<VehiclesController> logger;
 
-        public VehiclesController(IUnitOfWork unitOfWork)
+        public VehiclesController(IUnitOfWork unitOfWork, ILogger<VehiclesController> logger)
         {
             this.unitOfWork = unitOfWork;
+            this.logger = logger;
         }
 
         [HttpGet]
         public IActionResult GetAll()
         {
+            this.logger.LogInformation("Getting all vehicles");
             var vehicles = new List<Vehicle>();
 
             string includeProperties = "Accessories,Images";
             vehicles = this.unitOfWork.VehicleRepository.GetAll(null, null, includeProperties).ToList();
-            //var vehiclesJson = JsonConvert.SerializeObject(vehicles, Formatting.Indented,
-            //new JsonSerializerSettings
-            //{
-            //    ReferenceLoopHandling = ReferenceLoopHandling.Serialize
-            //});
 
-            return Ok(vehicles);
+            if (vehicles.Count > 0)
+            {
+                return Ok(vehicles);
+            }
+
+            this.logger.LogInformation($"{vehicles.Count} vehicles returned");
+            return NotFound();
         }
 
         [HttpGet]
@@ -43,19 +49,35 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
         {
             var vehicle = this.unitOfWork.VehicleRepository.Get(id);
 
-            return Ok(vehicle);
+
+            if (vehicle != null)
+            {
+                return Ok(vehicle);
+            }
+
+            this.logger.LogInformation($"vehicles returned: {vehicle} ");
+            return NotFound();
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Post(Vehicle vehicle)
         {
             this.unitOfWork.VehicleRepository.Insert(vehicle);
             var rowsAffected = this.unitOfWork.Commit();
 
-            return Ok();
+            if (rowsAffected > 0)
+            {
+                var message = $"Vehicle {vehicle.Id} was inserted successfully.";
+                this.logger.LogInformation(message);
+                return Ok(message);
+            }
+
+            return BadRequest($"Vehicle {vehicle.Id} was not inserted.");
         }
 
         [HttpPut]
+        [Authorize]
         public IActionResult Update(Vehicle vehicle)
         {
             this.unitOfWork.VehicleRepository.Update(vehicle);
@@ -65,12 +87,28 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
         }
 
         [HttpDelete]
-        public IActionResult Delete(Vehicle vehicle)
+        [Route("{id}")]
+        [Authorize]
+        public IActionResult Delete(Guid id)
         {
-            this.unitOfWork.VehicleRepository.Delete(vehicle);
-            var rowsAffected = this.unitOfWork.Commit();
-
-            return Ok();
+            var vehicle = this.unitOfWork.VehicleRepository.Get(id);
+            if (vehicle != null)
+            {
+                this.unitOfWork.VehicleRepository.Delete(vehicle);
+                var rowsAffected = this.unitOfWork.Commit();
+                if (rowsAffected > 0)
+                {
+                    return Ok("Vehicle deleted successfully.");
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            else
+            {
+                return NotFound();
+            }
         }
     }
 }

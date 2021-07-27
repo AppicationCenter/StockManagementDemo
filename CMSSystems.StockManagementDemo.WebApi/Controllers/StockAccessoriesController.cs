@@ -1,7 +1,9 @@
 ﻿using CMSSystems.StockManagementDemo.Data;
 using CMSSystems.StockManagementDemo.Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,10 +15,12 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
     [ApiController]
     public class StockAccessoriesController : ControllerBase
     {
+        private readonly ILogger<StockAccessoriesController> logger;
         private readonly IUnitOfWork unitOfWork;
 
-        public StockAccessoriesController(IUnitOfWork unitOfWork)
+        public StockAccessoriesController(ILogger<StockAccessoriesController> logger, IUnitOfWork unitOfWork)
         {
+            this.logger = logger;
             this.unitOfWork = unitOfWork;
         }
 
@@ -24,47 +28,130 @@ namespace CMSSystems.StockManagementDemo.WebApi.Controllers
         //[RoutePrefix("quotes")]
         public IActionResult GetAll()
         {
-            var StockAccessories = new List<StockAccessory>();
+            try
+            {
+                var stockAccessories = new List<StockAccessory>();
 
-            StockAccessories = this.unitOfWork.StockAccessoryRepository.GetAll().ToList();
+                stockAccessories = this.unitOfWork.StockAccessoryRepository.GetAll().ToList();
 
-            return Ok(StockAccessories);
+                if (stockAccessories != null && stockAccessories.Count > 0)
+                {
+                    return Ok(stockAccessories); 
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex.StackTrace);
+                throw;
+            }
         }
 
         [HttpGet]
         [Route("{id}")]
-        public IActionResult Get(Guid id)
+        public IActionResult Get(int id)
         {
-            var StockAccessory = this.unitOfWork.StockAccessoryRepository.Get(id);
+            try
+            {
+                var stockAccessory = this.unitOfWork.StockAccessoryRepository.Get(id);
 
-            return Ok(StockAccessory);
+                if (stockAccessory != null)
+                {
+                    return Ok(stockAccessory); 
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex) { this.logger.LogError(ex.StackTrace); throw; }
         }
 
         [HttpPost]
+        [Authorize]
         public IActionResult Post(StockAccessory StockAccessory)
         {
-            this.unitOfWork.StockAccessoryRepository.Insert(StockAccessory);
-            var rowsAffected = this.unitOfWork.Commit();
+            try
+            {
+                this.unitOfWork.StockAccessoryRepository.Insert(StockAccessory);
+                var rowsAffected = this.unitOfWork.Commit();
 
-            return Ok("StockAccessory model inserted successfully");
+                if (rowsAffected > 0)
+                {
+                    return Ok("StockAccessory model inserted successfully"); 
+                }
+                else
+                {
+                    return BadRequest("Stock Accessory model not inserted.");
+                }
+            }
+            catch (Exception ex )
+            {
+                this.logger.LogError(ex.StackTrace);
+                throw;
+            }
         }
 
         [HttpPut]
+        [Authorize]
         public IActionResult Update(StockAccessory StockAccessory)
         {
-            this.unitOfWork.StockAccessoryRepository.Update(StockAccessory);
-            var rowsAffected = this.unitOfWork.Commit();
+            try
+            {
+                this.unitOfWork.StockAccessoryRepository.Update(StockAccessory);
+                var rowsAffected = this.unitOfWork.Commit();
 
-            return Ok("StockAccessory model updated successfully");
+                if (rowsAffected > 0)
+                {
+                    return Ok("StockAccessory model updated successfully");
+                }
+                else
+                {
+                    return BadRequest("Stock Accessory not model updated");
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex.StackTrace);
+                throw;
+            }
         }
 
         [HttpDelete]
-        public IActionResult Delete(StockAccessory StockAccessory)
+        [Authorize]
+        [Route("{id}")]
+        public IActionResult Delete(int id)
         {
-            this.unitOfWork.StockAccessoryRepository.Delete(StockAccessory);
-            var rowsAffected = this.unitOfWork.Commit();
+            try
+            {
+                StockAccessory stockAccessory = this.unitOfWork.StockAccessoryRepository.Get(id);
 
-            return Ok("StockAccessory model deleted successfully");
+                if (stockAccessory != null)
+                {
+                    this.unitOfWork.StockAccessoryRepository.Delete(stockAccessory);
+                    var rowsAffected = this.unitOfWork.Commit();
+                    if (rowsAffected > 0)
+                    {
+                        return Ok("Stock accessory deleted successfully.");
+                    }
+                    else
+                    {
+                        return BadRequest("Stock accessory not deleted.");
+                    }
+                }
+                else
+                {
+                    return NotFound();
+                }
+            }
+            catch (Exception ex)
+            {
+                this.logger.LogError(ex.StackTrace);
+                throw;
+            }
         }
     }
 }
